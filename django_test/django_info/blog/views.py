@@ -17,16 +17,16 @@ def article_content(request):
     return HttpResponse(return_str)
 
 def get_index_page(request):
-    page=request.GET.get('page')
+    page=request.GET.get('page')   #获取blog/index?page=id中的id数值
     if page:
         page=int(page)
     else:
         page=1
     print("page:",page)
     all_article=Article.objects.all()
-    top_article=Article.objects.order_by("-publish_data")[:]
-    paginator=Paginator(all_article,1)
-    page_num=paginator.num_pages
+    top_article=Article.objects.order_by("-publish_data")[:]   #按照发布日期对最新文章进行排序，加上-号是递减排序
+    paginator=Paginator(all_article,1)    #Paginator为实现分页，每页一篇文章
+    page_num=paginator.num_pages         #统计页数，构建页数的列表
     print('num:',paginator.num_pages)
     page_list=paginator.page(page)
     if page_list.has_next():
@@ -37,7 +37,7 @@ def get_index_page(request):
         previous_page=page-1
     else:
         previous_page=page
-    return render(request,"blog/index.html",
+    return render(request,"blog/index.html",           #凡是页面里需要用到的变量，在渲染视图函数的过程中，都需要将函数中的变量与页面里的元素构成字典一一对应
                   {
         'article_list':page_list,
         'page_num':range(1,page_num+1),
@@ -65,7 +65,7 @@ def get_detail(request,article_id):
         if article.article_id==article_id:
             curr_article=article
             pre_article=all_article[pre_index]
-            next_article=all_article[next_index]
+            next_article=all_article[next_index]     #实现上一页，下一页
             break
     section=curr_article.content.split('\n')
     return render(request,'blog/detail.html',

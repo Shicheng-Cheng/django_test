@@ -18,4 +18,5 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/',include('blog.urls'))
+#此处blog/是规范了blog应用下的url
 ]
